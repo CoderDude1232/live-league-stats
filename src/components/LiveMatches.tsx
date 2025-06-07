@@ -1,88 +1,133 @@
-import React, { useState, useEffect } from 'react';
-import { Clock, MapPin, Users } from 'lucide-react';
+import React, { useState } from 'react';
+import { Clock, MapPin, Users, RefreshCw, Wifi, WifiOff } from 'lucide-react';
 import MatchCard from './MatchCard';
 import { Match } from '../types/Match';
+import { sportRadarService } from '../services/sportRadarService';
+import { useApiData } from '../hooks/useApiData';
 
 const LiveMatches: React.FC = () => {
-  const [matches, setMatches] = useState<Match[]>([]);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
-  useEffect(() => {
-    // Simulate live data updates
-    const mockMatches: Match[] = [
-      {
-        id: '1',
-        homeTeam: { name: 'Sydney Roosters', logo: '🐓', score: 18 },
-        awayTeam: { name: 'Melbourne Storm', logo: '⚡', score: 14 },
-        status: 'live',
-        time: '67:32',
-        venue: 'Allianz Stadium',
-        attendance: 42156,
-        round: 'Round 15'
-      },
-      {
-        id: '2',
-        homeTeam: { name: 'Brisbane Broncos', logo: '🐎', score: 22 },
-        awayTeam: { name: 'Parramatta Eels', logo: '🐍', score: 16 },
-        status: 'live',
-        time: '45:18',
-        venue: 'Suncorp Stadium',
-        attendance: 38942,
-        round: 'Round 15'
-      },
-      {
-        id: '3',
-        homeTeam: { name: 'Penrith Panthers', logo: '🐆', score: 0 },
-        awayTeam: { name: 'South Sydney Rabbitohs', logo: '🐰', score: 0 },
-        status: 'upcoming',
-        time: '19:30',
-        venue: 'BlueBet Stadium',
-        attendance: 0,
-        round: 'Round 15'
-      },
-      {
-        id: '4',
-        homeTeam: { name: 'Canterbury Bulldogs', logo: '🐕', score: 28 },
-        awayTeam: { name: 'Wests Tigers', logo: '🐅', score: 12 },
-        status: 'finished',
-        time: 'FT',
-        venue: 'Accor Stadium',
-        attendance: 15678,
-        round: 'Round 15'
-      }
-    ];
+  // Fetch all matches
+  const {
+    data: allMatches,
+    loading: matchesLoading,
+    error: matchesError,
+    lastUpdated: matchesLastUpdated,
+    refresh: refreshMatches
+  } = useApiData(() => sportRadarService.getMatches(), {
+    refreshInterval: 60000 // Refresh every minute for general matches
+  });
 
-    setMatches(mockMatches);
+  // Fetch live matches more frequently
+  const {
+    data: liveMatchesData,
+    loading: liveLoading,
+    error: liveError,
+    lastUpdated: liveLastUpdated,
+    refresh: refreshLive
+  } = useApiData(() => sportRadarService.getLiveMatches(), {
+    refreshInterval: 30000 // Refresh every 30 seconds for live matches
+  });
 
-    // Simulate score updates for live matches
-    const interval = setInterval(() => {
-      setMatches(prev => prev.map(match => {
-        if (match.status === 'live' && Math.random() > 0.8) {
-          const isHomeScore = Math.random() > 0.5;
-          return {
-            ...match,
-            homeTeam: {
-              ...match.homeTeam,
-              score: isHomeScore ? match.homeTeam.score + 4 : match.homeTeam.score
-            },
-            awayTeam: {
-              ...match.awayTeam,
-              score: !isHomeScore ? match.awayTeam.score + 4 : match.awayTeam.score
-            }
-          };
-        }
-        return match;
-      }));
-    }, 5000);
+  // Monitor online status
+  React.useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
 
-    return () => clearInterval(interval);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
   }, []);
+
+  // Merge live data with all matches data
+  const matches = React.useMemo(() => {
+    if (!allMatches) return [];
+    
+    let mergedMatches = [...allMatches];
+    
+    // Update with live data if available
+    if (liveMatchesData) {
+      liveMatchesData.forEach(liveMatch => {
+        const index = mergedMatches.findIndex(match => match.id === liveMatch.id);
+        if (index !== -1) {
+          mergedMatches[index] = liveMatch;
+        } else {
+          mergedMatches.push(liveMatch);
+        }
+      });
+    }
+    
+    return mergedMatches;
+  }, [allMatches, liveMatchesData]);
 
   const liveMatches = matches.filter(match => match.status === 'live');
   const upcomingMatches = matches.filter(match => match.status === 'upcoming');
   const finishedMatches = matches.filter(match => match.status === 'finished');
 
+  const handleRefresh = () => {
+    refreshMatches();
+    refreshLive();
+  };
+
+  if (matchesLoading && !matches.length) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center">
+          <RefreshCw className="w-8 h-8 animate-spin text-nrl-blue mx-auto mb-4" />
+          <p className="text-slate-600">Loading match data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
+      {/* Status Bar */}
+      <div className="bg-white rounded-xl shadow-lg p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              {isOnline ? (
+                <Wifi className="w-5 h-5 text-green-600" />
+              ) : (
+                <WifiOff className="w-5 h-5 text-red-600" />
+              )}
+              <span className={`text-sm font-medium ${isOnline ? 'text-green-600' : 'text-red-600'}`}>
+                {isOnline ? 'Connected' : 'Offline'}
+              </span>
+            </div>
+            
+            {matchesLastUpdated && (
+              <div className="text-sm text-slate-600">
+                Last updated: {matchesLastUpdated.toLocaleTimeString()}
+              </div>
+            )}
+          </div>
+          
+          <button
+            onClick={handleRefresh}
+            disabled={matchesLoading || liveLoading}
+            className="flex items-center space-x-2 px-4 py-2 bg-nrl-blue text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <RefreshCw className={`w-4 h-4 ${(matchesLoading || liveLoading) ? 'animate-spin' : ''}`} />
+            <span>Refresh</span>
+          </button>
+        </div>
+        
+        {(matchesError || liveError) && (
+          <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-800 text-sm">
+              {matchesError || liveError} - Showing cached data
+            </p>
+          </div>
+        )}
+      </div>
+
       {/* Live Matches */}
       {liveMatches.length > 0 && (
         <section>
@@ -94,6 +139,11 @@ const LiveMatches: React.FC = () => {
             <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
               {liveMatches.length} match{liveMatches.length !== 1 ? 'es' : ''}
             </span>
+            {liveLastUpdated && (
+              <span className="text-sm text-slate-500">
+                Updated {liveLastUpdated.toLocaleTimeString()}
+              </span>
+            )}
           </div>
           <div className="grid gap-6 md:grid-cols-2">
             {liveMatches.map(match => (
@@ -133,6 +183,12 @@ const LiveMatches: React.FC = () => {
             ))}
           </div>
         </section>
+      )}
+
+      {matches.length === 0 && !matchesLoading && (
+        <div className="text-center py-12">
+          <p className="text-slate-600">No matches available at the moment.</p>
+        </div>
       )}
     </div>
   );
