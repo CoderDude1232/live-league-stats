@@ -150,6 +150,14 @@ npm run build
 
 The built application will be in the `dist` directory.
 
+## Running Tests
+
+Execute unit tests with Vitest:
+
+```bash
+npm test
+```
+
 ## Contributing
 
 1. Fork the repository
