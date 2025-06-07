@@ -134,7 +134,7 @@ class SportRadarService {
     return 'TBD';
   }
 
-  async getMatches(): Promise<Match[]> {
+  getMatches = async (): Promise<Match[]> => {
     try {
       const url = API_CONFIG.SPORTRADAR.ENDPOINTS.MATCHES
         .replace('{season_id}', CURRENT_SEASON_ID);
@@ -166,7 +166,7 @@ class SportRadarService {
     }
   }
 
-  async getLiveMatches(): Promise<Match[]> {
+  getLiveMatches = async (): Promise<Match[]> => {
     try {
       const url = API_CONFIG.SPORTRADAR.ENDPOINTS.LIVE_MATCHES
         .replace('{season_id}', CURRENT_SEASON_ID);
@@ -197,7 +197,7 @@ class SportRadarService {
     }
   }
 
-  async getStandings(): Promise<StandingsTeam[]> {
+  getStandings = async (): Promise<StandingsTeam[]> => {
     try {
       const url = API_CONFIG.SPORTRADAR.ENDPOINTS.STANDINGS
         .replace('{season_id}', CURRENT_SEASON_ID);
@@ -224,7 +224,7 @@ class SportRadarService {
     }
   }
 
-  async getPlayerStats(): Promise<Player[]> {
+  getPlayerStats = async (): Promise<Player[]> => {
     try {
       const url = API_CONFIG.SPORTRADAR.ENDPOINTS.PLAYER_STATS
         .replace('{season_id}', CURRENT_SEASON_ID);
