@@ -111,7 +111,7 @@ src/
 ├── hooks/              # Custom React hooks
 ├── types/              # TypeScript type definitions
 ├── config/             # Configuration files
-└── styles/             # CSS and styling
+└── index.css           # Global styles
 ```
 
 ### Key Components
