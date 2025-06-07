@@ -4,7 +4,7 @@ import { Match } from '../types/Match';
 import { Team as StandingsTeam } from '../types/Standings';
 import { Player } from '../types/Player';
 
-export interface SportRadarMatch {
+export interface ZylaMatch {
   id: string;
   scheduled: string;
   status: string;
@@ -32,7 +32,7 @@ export interface SportRadarMatch {
   clock?: string;
 }
 
-export interface SportRadarStandings {
+export interface ZylaStandings {
   standings: Array<{
     team: {
       id: string;
@@ -51,7 +51,7 @@ export interface SportRadarStandings {
   }>;
 }
 
-export interface SportRadarPlayerStats {
+export interface ZylaPlayerStats {
   players: Array<{
     id: string;
     name: string;
@@ -72,7 +72,7 @@ export interface SportRadarPlayerStats {
   }>;
 }
 
-class SportRadarService {
+class ZylaService {
   private teamLogos: { [key: string]: string } = {
     'penrith': '🐆',
     'melbourne': '⚡',
@@ -118,7 +118,7 @@ class SportRadarService {
     }
   }
 
-  private formatMatchTime(match: SportRadarMatch): string {
+  private formatMatchTime(match: ZylaMatch): string {
     if (match.status === 'inprogress' && match.clock) {
       return match.clock;
     }
@@ -136,10 +136,10 @@ class SportRadarService {
 
   getMatches = async (): Promise<Match[]> => {
     try {
-      const url = API_CONFIG.SPORTRADAR.ENDPOINTS.MATCHES
+        const url = API_CONFIG.ZYLA.ENDPOINTS.MATCHES
         .replace('{season_id}', CURRENT_SEASON_ID);
       
-      const response = await apiClient.get<{ schedules: SportRadarMatch[] }>(url);
+        const response = await apiClient.get<{ schedules: ZylaMatch[] }>(url);
       
       return response.schedules.map((match): Match => ({
         id: match.id,
@@ -168,10 +168,10 @@ class SportRadarService {
 
   getLiveMatches = async (): Promise<Match[]> => {
     try {
-      const url = API_CONFIG.SPORTRADAR.ENDPOINTS.LIVE_MATCHES
+        const url = API_CONFIG.ZYLA.ENDPOINTS.LIVE_MATCHES
         .replace('{season_id}', CURRENT_SEASON_ID);
       
-      const response = await apiClient.get<{ matches: SportRadarMatch[] }>(url, {}, false); // Don't cache live data
+        const response = await apiClient.get<{ matches: ZylaMatch[] }>(url, {}, false); // Don't cache live data
       
       return response.matches.map((match): Match => ({
         id: match.id,
@@ -199,10 +199,10 @@ class SportRadarService {
 
   getStandings = async (): Promise<StandingsTeam[]> => {
     try {
-      const url = API_CONFIG.SPORTRADAR.ENDPOINTS.STANDINGS
+        const url = API_CONFIG.ZYLA.ENDPOINTS.STANDINGS
         .replace('{season_id}', CURRENT_SEASON_ID);
       
-      const response = await apiClient.get<SportRadarStandings>(url);
+        const response = await apiClient.get<ZylaStandings>(url);
       
       return response.standings.map((standing): StandingsTeam => ({
         position: standing.rank,
@@ -226,10 +226,10 @@ class SportRadarService {
 
   getPlayerStats = async (): Promise<Player[]> => {
     try {
-      const url = API_CONFIG.SPORTRADAR.ENDPOINTS.PLAYER_STATS
+        const url = API_CONFIG.ZYLA.ENDPOINTS.PLAYER_STATS
         .replace('{season_id}', CURRENT_SEASON_ID);
       
-      const response = await apiClient.get<SportRadarPlayerStats>(url);
+        const response = await apiClient.get<ZylaPlayerStats>(url);
       
       return response.players.map((player): Player => ({
         name: player.name,
@@ -309,4 +309,4 @@ class SportRadarService {
   }
 }
 
-export const sportRadarService = new SportRadarService();
+export const zylaService = new ZylaService();

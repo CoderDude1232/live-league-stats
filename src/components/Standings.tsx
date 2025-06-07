@@ -1,7 +1,7 @@
 import React from 'react';
 import { TrendingUp, TrendingDown, Minus, RefreshCw, AlertCircle } from 'lucide-react';
 import { Team } from '../types/Standings';
-import { sportRadarService } from '../services/sportRadarService';
+import { zylaService } from '../services/zylaService';
 import { useApiData } from '../hooks/useApiData';
 
 const Standings: React.FC = () => {
@@ -11,7 +11,7 @@ const Standings: React.FC = () => {
     error,
     lastUpdated,
     refresh
-  } = useApiData(sportRadarService.getStandings, {
+  } = useApiData(zylaService.getStandings, {
     refreshInterval: 300000 // Refresh every 5 minutes for standings
   });
 

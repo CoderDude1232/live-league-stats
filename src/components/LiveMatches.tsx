@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Clock, MapPin, Users, RefreshCw, Wifi, WifiOff } from 'lucide-react';
 import MatchCard from './MatchCard';
 import { Match } from '../types/Match';
-import { sportRadarService } from '../services/sportRadarService';
+import { zylaService } from '../services/zylaService';
 import { useApiData } from '../hooks/useApiData';
 
 const LiveMatches: React.FC = () => {
@@ -15,7 +15,7 @@ const LiveMatches: React.FC = () => {
     error: matchesError,
     lastUpdated: matchesLastUpdated,
     refresh: refreshMatches
-  } = useApiData(sportRadarService.getMatches, {
+  } = useApiData(zylaService.getMatches, {
     refreshInterval: 60000 // Refresh every minute for general matches
   });
 
@@ -26,7 +26,7 @@ const LiveMatches: React.FC = () => {
     error: liveError,
     lastUpdated: liveLastUpdated,
     refresh: refreshLive
-  } = useApiData(sportRadarService.getLiveMatches, {
+  } = useApiData(zylaService.getLiveMatches, {
     refreshInterval: 30000 // Refresh every 30 seconds for live matches
   });
 

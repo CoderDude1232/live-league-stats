@@ -1,6 +1,6 @@
 # NRL Live Stats
 
-A modern, real-time NRL (National Rugby League) statistics application built with React, TypeScript, and Tailwind CSS. Features live match scores, player statistics, and team standings with SportRadar API integration.
+A modern, real-time NRL (National Rugby League) statistics application built with React, TypeScript, and Tailwind CSS. Features live match scores, player statistics, and team standings with Zyla API integration.
 
 ## Features
 
@@ -17,7 +17,7 @@ A modern, real-time NRL (National Rugby League) statistics application built wit
 - **Frontend**: React 18, TypeScript, Tailwind CSS
 - **Build Tool**: Vite
 - **HTTP Client**: Axios
-- **API**: SportRadar Rugby League API
+- **API**: Zyla Rugby League API
 - **Icons**: Lucide React
 
 ## Getting Started
@@ -25,7 +25,7 @@ A modern, real-time NRL (National Rugby League) statistics application built wit
 ### Prerequisites
 
 - Node.js 16+ and npm
-- SportRadar API key (sign up at [SportRadar](https://developer.sportradar.com/))
+- Zyla API key (sign up at [Zyla](https://zylalabs.com))
 
 ### Installation
 
@@ -47,8 +47,8 @@ cp .env.example .env
 
 4. Configure your environment variables in `.env`:
 ```env
-VITE_SPORTRADAR_API_KEY=your_sportradar_api_key_here
-VITE_SPORTRADAR_BASE_URL=https://api.sportradar.us/rugby-league/trial/v2/en
+VITE_ZYLA_API_KEY=your_zyla_api_key_here
+VITE_ZYLA_BASE_URL=https://api.zyla.com/nrl/v1
 VITE_API_CACHE_DURATION=300000
 VITE_LIVE_UPDATE_INTERVAL=30000
 ```
@@ -60,10 +60,10 @@ npm run dev
 
 ## API Configuration
 
-### SportRadar Setup
+### Zyla Setup
 
-1. Sign up for a SportRadar developer account
-2. Subscribe to the Rugby League API
+1. Sign up for a Zyla developer account
+2. Subscribe to the NRL Rugby League API
 3. Get your API key from the dashboard
 4. Update the `.env` file with your credentials
 
@@ -124,21 +124,21 @@ src/
 ### API Service Architecture
 
 - `apiClient`: HTTP client with caching and retry logic
-- `sportRadarService`: SportRadar API integration
+- `zylaService`: Zyla API integration
 - `useApiData`: React hook for data fetching and state management
 
 ## Configuration Options
 
 ### Environment Variables
 
-- `VITE_SPORTRADAR_API_KEY`: Your SportRadar API key
-- `VITE_SPORTRADAR_BASE_URL`: SportRadar API base URL
+- `VITE_ZYLA_API_KEY`: Your Zyla API key
+- `VITE_ZYLA_BASE_URL`: Zyla API base URL
 - `VITE_API_CACHE_DURATION`: Cache duration in milliseconds (default: 5 minutes)
 - `VITE_LIVE_UPDATE_INTERVAL`: Live data refresh interval (default: 30 seconds)
 
 ### Customization
 
-- Update team logos in `sportRadarService.ts`
+- Update team logos in `zylaService.ts`
 - Modify refresh intervals in component configurations
 - Adjust caching strategies in `apiClient.ts`
 
@@ -173,7 +173,7 @@ This project is licensed under the MIT License.
 ## Support
 
 For issues and questions:
-- Check the SportRadar API documentation
+- Check the Zyla API documentation
 - Review the error handling in browser console
 - Ensure your API key has proper permissions
 - Verify network connectivity for live features
