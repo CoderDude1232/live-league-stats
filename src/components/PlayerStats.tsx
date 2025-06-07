@@ -13,7 +13,7 @@ const PlayerStats: React.FC = () => {
     error,
     lastUpdated,
     refresh
-  } = useApiData(() => sportRadarService.getPlayerStats(), {
+  } = useApiData(sportRadarService.getPlayerStats, {
     refreshInterval: 300000 // Refresh every 5 minutes for player stats
   });
 

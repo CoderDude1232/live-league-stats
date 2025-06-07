@@ -11,7 +11,7 @@ const Standings: React.FC = () => {
     error,
     lastUpdated,
     refresh
-  } = useApiData(() => sportRadarService.getStandings(), {
+  } = useApiData(sportRadarService.getStandings, {
     refreshInterval: 300000 // Refresh every 5 minutes for standings
   });
 

@@ -15,7 +15,7 @@ const LiveMatches: React.FC = () => {
     error: matchesError,
     lastUpdated: matchesLastUpdated,
     refresh: refreshMatches
-  } = useApiData(() => sportRadarService.getMatches(), {
+  } = useApiData(sportRadarService.getMatches, {
     refreshInterval: 60000 // Refresh every minute for general matches
   });
 
@@ -26,7 +26,7 @@ const LiveMatches: React.FC = () => {
     error: liveError,
     lastUpdated: liveLastUpdated,
     refresh: refreshLive
-  } = useApiData(() => sportRadarService.getLiveMatches(), {
+  } = useApiData(sportRadarService.getLiveMatches, {
     refreshInterval: 30000 // Refresh every 30 seconds for live matches
   });
 
