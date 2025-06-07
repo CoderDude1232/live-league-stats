@@ -7,7 +7,8 @@ export const API_CONFIG = {
       SEASONS: '/competitions/{competition_id}/seasons',
       STANDINGS: '/seasons/{season_id}/standings',
       MATCHES: '/seasons/{season_id}/schedules',
-      LIVE_MATCHES: '/seasons/{season_id}/live_standings',
+      // Endpoint for currently live matches
+      LIVE_MATCHES: '/seasons/{season_id}/schedules/live',
       MATCH_SUMMARY: '/matches/{match_id}/summary',
       PLAYER_STATS: '/seasons/{season_id}/players',
       TEAM_STATS: '/seasons/{season_id}/teams'
