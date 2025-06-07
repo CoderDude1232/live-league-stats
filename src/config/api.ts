@@ -1,14 +1,14 @@
 export const API_CONFIG = {
-  SPORTRADAR: {
-    BASE_URL: import.meta.env.VITE_SPORTRADAR_BASE_URL || 'https://api.sportradar.us/rugby-league/trial/v2/en',
-    API_KEY: import.meta.env.VITE_SPORTRADAR_API_KEY || '',
+  ZYLA: {
+    BASE_URL: import.meta.env.VITE_ZYLA_BASE_URL || 'https://api.zyla.com/nrl/v1',
+    API_KEY: import.meta.env.VITE_ZYLA_API_KEY || '',
     ENDPOINTS: {
       COMPETITIONS: '/competitions',
       SEASONS: '/competitions/{competition_id}/seasons',
       STANDINGS: '/seasons/{season_id}/standings',
-      MATCHES: '/seasons/{season_id}/schedules',
+      MATCHES: '/seasons/{season_id}/matches',
       // Endpoint for currently live matches
-      LIVE_MATCHES: '/seasons/{season_id}/schedules/live',
+      LIVE_MATCHES: '/seasons/{season_id}/matches/live',
       MATCH_SUMMARY: '/matches/{match_id}/summary',
       PLAYER_STATS: '/seasons/{season_id}/players',
       TEAM_STATS: '/seasons/{season_id}/teams'
@@ -20,6 +20,6 @@ export const API_CONFIG = {
   MAX_RETRIES: 3
 };
 
-// NRL Competition ID (this would be obtained from SportRadar)
-export const NRL_COMPETITION_ID = 'sr:competition:1234'; // Replace with actual NRL competition ID
-export const CURRENT_SEASON_ID = 'sr:season:5678'; // Replace with current season ID
+// NRL Competition ID (obtain from your Zyla dashboard)
+export const NRL_COMPETITION_ID = 'zyla:competition:1234'; // Replace with actual NRL competition ID
+export const CURRENT_SEASON_ID = 'zyla:season:5678'; // Replace with current season ID

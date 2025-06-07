@@ -6,13 +6,13 @@ class ApiClient {
   private cache: Map<string, { data: any; timestamp: number }> = new Map();
 
   constructor() {
-    this.client = axios.create({
-      baseURL: API_CONFIG.SPORTRADAR.BASE_URL,
-      timeout: API_CONFIG.REQUEST_TIMEOUT,
-      params: {
-        api_key: API_CONFIG.SPORTRADAR.API_KEY
-      }
-    });
+      this.client = axios.create({
+        baseURL: API_CONFIG.ZYLA.BASE_URL,
+        timeout: API_CONFIG.REQUEST_TIMEOUT,
+        params: {
+          apikey: API_CONFIG.ZYLA.API_KEY
+        }
+      });
 
     // Request interceptor for logging
     this.client.interceptors.request.use(
